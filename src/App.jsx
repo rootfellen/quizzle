@@ -1,33 +1,40 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import introImage from "./assets/intro/intro.svg";
 import Asteroid from "./components/asteroid/Asteroid";
 import options from "./data/quotesOptions";
+import Quiz from "./components/quiz/Quiz";
+import Intro from "./components/Intro/Intro";
+
 function App() {
-  const [quotes, setQuotes] = useState([]);
+  const [quote, setQuote] = useState("");
+  const [quiz, setQuiz] = useState("");
 
   useEffect(() => {
-    fetch("https://motivational-quotes1.p.rapidapi.com/motivation", options)
+    fetch(
+      "https://famous-quotes4.p.rapidapi.com/random?category=all&count=2",
+      options
+    )
       .then((response) => response.json())
-      .then((response) => console.log(response))
+      .then((data) => setQuote(data[0]))
       .catch((err) => console.error(err));
   }, []);
+
+  function loadQuiz() {
+    fetch("https://opentdb.com/api.php?amount=6")
+      .then((res) => res.json())
+      .then((data) => setQuiz(data))
+      .catch((err) => console.log(err));
+  }
+  console.log(quiz);
   return (
     <>
       <Asteroid />
       <div className="container">
-        <div className="wrapper">
-          <div className="app-info">
-            <div className="app-intro-image">
-              <img src={introImage} alt="Quizzle" />
-            </div>
-            <h1 className="app-title">Quizzle</h1>
-            <p className="app-quote">Random quote about knowledge here...</p>
-            <a href="/" className="app-quizz">
-              Start
-            </a>
-          </div>
-        </div>
+        {quiz ? (
+          <Quiz data={quiz} />
+        ) : (
+          <Intro loadQuiz={loadQuiz} quote={quote} />
+        )}
       </div>
     </>
   );

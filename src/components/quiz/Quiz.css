@@ -1,0 +1,31 @@
+.quiz-container {
+  min-width: 70%;
+  background-color: #2a3064;
+  border-radius: 7px;
+  margin: 1rem;
+  padding: 1rem;
+  z-index: 10;
+}
+.quiz-question {
+  background-color: aliceblue;
+  color: #2a3064;
+  border-radius: 7px;
+  margin: 1rem 0rem;
+  padding: 1rem;
+}
+
+.question-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.quiz-question:first-child {
+  margin-top: 0rem;
+}
+.quiz-question:last-child {
+  margin-bottom: 0rem;
+}
+.quiz-answers {
+  display: flex;
+  list-style: none;
+  margin-top: 1rem;
+}
