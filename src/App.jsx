@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     fetch(
-      "https://famous-quotes4.p.rapidapi.com/random?category=all&count=2",
+      "https://famous-quotes4.p.rapidapi.com/random?category=all&count=1",
       options
     )
       .then((response) => response.json())
