@@ -11,10 +11,10 @@ const Intro = (props) => {
             <img src={introImage} alt="Quizzle" />
           </div>
           <h1 className="app-title">Quizzle</h1>
-          <p className="app-quote">
-            "{props.quote.text}"
+          {/* <p className="app-quote">
+            "{props.quote.quote}"
             <span className="quote-author">{props.quote.author}</span>
-          </p>
+          </p> */}
           <button onClick={props.handleStart} className="app-quizz-btn">
             Start
           </button>
