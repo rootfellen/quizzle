@@ -7,7 +7,8 @@ import Intro from "./components/Intro/Intro";
 
 function App() {
   const [quote, setQuote] = useState("");
-  const [quiz, setQuiz] = useState("");
+  const [quiz, setQuiz] = useState([]);
+  const [start, setStart] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -19,21 +20,25 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-  function loadQuiz() {
-    fetch("https://opentdb.com/api.php?amount=6")
+  useEffect(() => {
+    fetch("https://opentdb.com/api.php?amount=6&type=multiple")
       .then((res) => res.json())
-      .then((data) => setQuiz(data))
-      .catch((err) => console.log(err));
+      .then((data) => setQuiz(data.results))
+      .catch((err) => console.error(err));
+  }, []);
+
+  function handleStart() {
+    setStart(!start);
   }
-  console.log(quiz);
+
   return (
     <>
       <Asteroid />
       <div className="container">
-        {quiz ? (
+        {start ? (
           <Quiz data={quiz} />
         ) : (
-          <Intro loadQuiz={loadQuiz} quote={quote} />
+          <Intro handleStart={handleStart} quote={quote} />
         )}
       </div>
     </>

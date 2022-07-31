@@ -48,7 +48,7 @@
   font-style: italic;
 }
 
-.app-quizz {
+.app-quizz-btn {
   background-color: transparent;
   border: 1px solid #56cca9;
   color: #fff;
@@ -59,7 +59,7 @@
   transition: 0.3s ease-in-out;
 }
 
-.app-quizz:hover {
+.app-quizz-btn:hover {
   color: #1b214f;
   background-color: #56cca9;
 }

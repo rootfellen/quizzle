@@ -15,7 +15,7 @@ const Intro = (props) => {
             "{props.quote.text}"
             <span className="quote-author">{props.quote.author}</span>
           </p>
-          <button onClick={props.loadQuiz} className="app-quizz">
+          <button onClick={props.handleStart} className="app-quizz-btn">
             Start
           </button>
         </div>
