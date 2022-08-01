@@ -22,7 +22,7 @@ function App() {
       .then((res) => res.json())
       .then((data) => setQuiz(data.results))
       .catch((err) => console.error(err));
-  }, []);
+  }, [start]);
 
   function handleStart() {
     setStart(!start);
