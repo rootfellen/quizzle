@@ -4,7 +4,6 @@ import { nanoid } from "nanoid";
 
 const Quiz = (props) => {
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState([]);
   // ==== UNESCAPING HTML DATA FROM API ==== //
 
   const htmlDecode = (input) => {
@@ -18,15 +17,23 @@ const Quiz = (props) => {
         const incorrectAnswers = q.incorrect_answers;
         const correctAnswer = q.correct_answer;
         const arr = [...incorrectAnswers];
-        arr.splice(
+        const newArr = arr.map((a) => a);
+        newArr.splice(
           Math.floor(Math.random() * (incorrectAnswers.length + 1)),
           0,
           correctAnswer
         );
         return {
-          question: q.question,
-          answers: arr,
-          id: nanoid(),
+          question: {
+            title: htmlDecode(q.question),
+            correctAnswer: correctAnswer,
+            incorrectAnswers: {
+              answers: [...newArr],
+              answerId: [...newArr].map((a) => nanoid(a)),
+            },
+            id: nanoid(),
+          },
+          // answers: arr,
         };
       });
     });
@@ -70,7 +77,25 @@ const Quiz = (props) => {
   return (
     <>
       <div className="quiz-container">
-        <div className="quiz-wrapper"></div>
+        <div className="quiz-wrapper">
+          {questions.map((q) => {
+            return (
+              <div key={q.question.id} className="quiz-question">
+                <h3 className="questions-title">{q.question.title}</h3>
+                <div className="quiz-answers">
+                  {q.question.incorrectAnswers.answers.map((a) => {
+                    return (
+                      <div key={nanoid()} className="quiz-answer-wrapper">
+                        <input type="radio" name={a} id={nanoid()} value={a} />
+                        <label htmlFor={a}>{htmlDecode(a)}</label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
         <div className="quiz-result">
           <button>Check result</button>
         </div>
