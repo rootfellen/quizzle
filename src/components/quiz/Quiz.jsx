@@ -4,6 +4,8 @@ import { nanoid } from "nanoid";
 
 const Quiz = (props) => {
   const [questions, setQuestions] = useState([]);
+  const [correctAnswers, setCorrectAnswers] = useState([]);
+
   // ==== UNESCAPING HTML DATA FROM API ==== //
 
   const htmlDecode = (input) => {
@@ -11,12 +13,24 @@ const Quiz = (props) => {
     return doc.documentElement.textContent;
   };
 
-  const checkAnswer = (e) => {
-    const output = questions.map((q) => q.question.id);
-    console.log(output);
-    console.log(e.target.id);
+  // ==== CHECKING IF THE CHOOSE ANSWERS CORRECT, ADDING TO CORRECT ANSWERS STATE FOR GIVING RESULTS LATER ==== //
+
+  const correctAnswerHandler = (e) => {
+    for (let i = 0; i < questions.length; i++) {
+      if (questions[i].question.id == e.target.name) {
+        if (
+          e.target.value === questions[i].question.correctAnswer &&
+          !correctAnswers.includes(e.target.value)
+        )
+          setCorrectAnswers((prevState) => {
+            return [...prevState, e.target.value];
+          });
+      }
+    }
   };
-  console.log(questions);
+
+  // ==== GETTING DATA FROM API AND SETTING STATE OBJECT ==== //
+
   useEffect(() => {
     setQuestions(() => {
       return props.data.map((q) => {
@@ -43,12 +57,12 @@ const Quiz = (props) => {
             },
             id: nanoid(),
           },
-          // answers: arr,
         };
       });
     });
   }, []);
-
+  console.log(correctAnswers);
+  console.log(questions);
   // ==== CREATING LIST OF QUESTIONS WITH ANSWERS (INCLUDING CORRECT ONE) ==== //
   return (
     <>
@@ -56,7 +70,11 @@ const Quiz = (props) => {
         <form className="quiz-wrapper">
           {questions.map((q) => {
             return (
-              <div key={q.question.id} className="quiz-question">
+              <div
+                key={q.question.id}
+                id={q.question.id}
+                className="quiz-question"
+              >
                 <h3 className="questions-title">{q.question.title}</h3>
                 <div className="quiz-answers">
                   {q.question.incorrectAnswers.answers.map((a, idx) => {
@@ -67,7 +85,7 @@ const Quiz = (props) => {
                           id={a.id}
                           name={q.question.id}
                           value={a.answer}
-                          onClick={checkAnswer}
+                          onClick={correctAnswerHandler}
                         />
                         <label htmlFor={a.id}>{htmlDecode(a.answer)}</label>
                       </div>
