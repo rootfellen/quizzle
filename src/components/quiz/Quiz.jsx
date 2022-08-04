@@ -22,6 +22,7 @@ const Quiz = (props) => {
         setOutput((prevState) => {
           return [...prevState, e.target.value];
         });
+
         if (
           e.target.value === questions[i].question.correctAnswer &&
           !correctAnswers.includes(e.target.value)
@@ -44,6 +45,18 @@ const Quiz = (props) => {
     }
   };
 
+  const checkHandler = (e) => {
+    const targetId = e.target.name;
+    const targetQ = questions
+      .map((q) => q.question.id)
+      .filter((t) => t === targetId);
+    if (targetId == targetQ) {
+      alert("YEs");
+    }
+    console.log(targetId);
+    console.log(targetQ);
+  };
+
   // ==== GETTING DATA FROM API AND SETTING STATE OBJECT ==== //
 
   useEffect(() => {
@@ -61,6 +74,7 @@ const Quiz = (props) => {
         return {
           question: {
             title: htmlDecode(q.question),
+            check: false,
             correctAnswer: correctAnswer,
             incorrectAnswers: {
               answers: [...newArr].map((a) => {
@@ -77,19 +91,17 @@ const Quiz = (props) => {
     });
   }, []);
 
-  console.log(correctAnswers);
-  console.log(output);
-
   // ==== CREATING LIST OF QUESTIONS WITH ANSWERS (INCLUDING CORRECT ONE) ==== //
   return (
     <>
       <div className="quiz-container">
-        <form className="quiz-wrapper">
+        <div className="quiz-wrapper">
           {questions.map((q) => {
             return (
               <div
                 key={q.question.id}
                 id={q.question.id}
+                check={q.question.check.toString()}
                 className="quiz-question"
               >
                 <h3 className="questions-title">{q.question.title}</h3>
@@ -103,6 +115,7 @@ const Quiz = (props) => {
                           name={q.question.id}
                           value={a.answer}
                           onClick={correctAnswerHandler}
+                          onChange={(name) => checkHandler(name)}
                         />
                         <label htmlFor={a.id}>{htmlDecode(a.answer)}</label>
                       </div>
@@ -112,7 +125,7 @@ const Quiz = (props) => {
               </div>
             );
           })}
-        </form>
+        </div>
         <div className="quiz-result">
           {results && (
             <div className="quiz-result-output">
