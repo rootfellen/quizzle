@@ -5,7 +5,8 @@ import { nanoid } from "nanoid";
 const Quiz = (props) => {
   const [questions, setQuestions] = useState([]);
   const [correctAnswers, setCorrectAnswers] = useState([]);
-
+  const [results, setResults] = useState("");
+  const [output, setOutput] = useState([]);
   // ==== UNESCAPING HTML DATA FROM API ==== //
 
   const htmlDecode = (input) => {
@@ -18,6 +19,9 @@ const Quiz = (props) => {
   const correctAnswerHandler = (e) => {
     for (let i = 0; i < questions.length; i++) {
       if (questions[i].question.id == e.target.name) {
+        setOutput((prevState) => {
+          return [...prevState, e.target.value];
+        });
         if (
           e.target.value === questions[i].question.correctAnswer &&
           !correctAnswers.includes(e.target.value)
@@ -26,6 +30,17 @@ const Quiz = (props) => {
             return [...prevState, e.target.value];
           });
       }
+    }
+  };
+
+  // ==== GIVING RESULTS BASED ON CORRECT ANSWERS STATE ARR LENGTH ==== //
+
+  const resultsHandler = () => {
+    if (output.length < 6) {
+      alert("Make sure to answer all questions");
+    } else {
+      setResults(correctAnswers.length);
+      setOutput([]);
     }
   };
 
@@ -61,8 +76,10 @@ const Quiz = (props) => {
       });
     });
   }, []);
+
   console.log(correctAnswers);
-  console.log(questions);
+  console.log(output);
+
   // ==== CREATING LIST OF QUESTIONS WITH ANSWERS (INCLUDING CORRECT ONE) ==== //
   return (
     <>
@@ -97,7 +114,12 @@ const Quiz = (props) => {
           })}
         </form>
         <div className="quiz-result">
-          <button>Check result</button>
+          {results && (
+            <div className="quiz-result-output">
+              <span>Your result:</span> {results} / {questions.length}
+            </div>
+          )}
+          <button onClick={resultsHandler}>Check result</button>
         </div>
       </div>
     </>

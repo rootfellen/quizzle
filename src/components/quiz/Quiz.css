@@ -53,6 +53,17 @@ input[type="radio"]:checked + label {
 .quiz-result {
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.quiz-result-output {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.quiz-result-output > span {
+  padding-right: 0.5rem;
 }
 
 .quiz-result button {
@@ -63,7 +74,7 @@ input[type="radio"]:checked + label {
   padding: 0.7rem;
   cursor: pointer;
   transition: 0.3s ease-in-out;
-  margin: 0.5rem 0rem;
+  margin: 0.5rem;
 }
 .quiz-result button:hover {
   background-color: rgb(117, 236, 196);
