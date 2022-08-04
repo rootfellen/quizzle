@@ -56,6 +56,7 @@
   padding: 1rem 3rem;
   border-radius: 7px;
   cursor: pointer;
+  margin-top: 2rem;
   transition: 0.3s ease-in-out;
 }
 
