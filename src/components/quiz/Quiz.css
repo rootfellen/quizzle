@@ -1,4 +1,7 @@
 .quiz-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   min-width: 50%;
   background-color: #2a3064;
   border-radius: 7px;

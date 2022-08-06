@@ -5,8 +5,9 @@ import { nanoid } from "nanoid";
 const Quiz = (props) => {
   const [questions, setQuestions] = useState([]);
   const [correctAnswers, setCorrectAnswers] = useState([]);
-  const [results, setResults] = useState("");
-  const [output, setOutput] = useState([]);
+  const [results, setResults] = useState(null);
+  const [game, setGame] = useState(false);
+
   // ==== UNESCAPING HTML DATA FROM API ==== //
 
   const htmlDecode = (input) => {
@@ -18,13 +19,9 @@ const Quiz = (props) => {
 
   const correctAnswerHandler = (e) => {
     for (let i = 0; i < questions.length; i++) {
-      if (questions[i].question.id == e.target.name) {
-        setOutput((prevState) => {
-          return [...prevState, e.target.value];
-        });
-
+      if (questions[i].id == e.target.name) {
         if (
-          e.target.value === questions[i].question.correctAnswer &&
+          e.target.value === questions[i].correctAnswer &&
           !correctAnswers.includes(e.target.value)
         )
           setCorrectAnswers((prevState) => {
@@ -37,24 +34,43 @@ const Quiz = (props) => {
   // ==== GIVING RESULTS BASED ON CORRECT ANSWERS STATE ARR LENGTH ==== //
 
   const resultsHandler = () => {
-    if (output.length < 6) {
-      alert("Make sure to answer all questions");
-    } else {
-      setResults(correctAnswers.length);
-      setOutput([]);
+    const allChecked = questions.filter((q) => q.check);
+    if (allChecked.length == questions.length) {
+      if (correctAnswers.length == 0) {
+        setResults("0");
+      } else {
+        setResults(correctAnswers.length);
+      }
+    }
+    if (allChecked.length == questions.length && results) {
+      setGame(!game);
+      setResults(null);
+    } else if (allChecked.length != questions.length) {
+      alert("Make sure to choose answer for all questions!");
     }
   };
 
+  // ==== SETTING EACH QUESTION CHECK FOR RESULT DISPLAY ==== //
+
   const checkHandler = (e) => {
     const targetId = e.target.name;
-    const targetQ = questions
-      .map((q) => q.question.id)
-      .filter((t) => t === targetId);
+    const targetQ = questions.map((q) => q.id).filter((t) => t === targetId);
     if (targetId == targetQ) {
-      alert("Ye s");
+      setQuestions((prevState) => {
+        return [...prevState].map((a) => {
+          if (a.id == targetQ) {
+            return {
+              ...a,
+              check: true,
+            };
+          } else {
+            return {
+              ...a,
+            };
+          }
+        });
+      });
     }
-    console.log(targetId);
-    console.log(targetQ);
   };
 
   // ==== GETTING DATA FROM API AND SETTING STATE OBJECT ==== //
@@ -62,34 +78,33 @@ const Quiz = (props) => {
   useEffect(() => {
     setQuestions(() => {
       return props.data.map((q) => {
-        const incorrectAnswers = q.incorrect_answers;
-        const correctAnswer = q.correct_answer;
-        const arr = [...incorrectAnswers];
+        const correct = q.correct_answer;
+        const incorrect = q.incorrect_answers;
+        const arr = [...incorrect];
         const newArr = arr.map((a) => a);
         newArr.splice(
-          Math.floor(Math.random() * (incorrectAnswers.length + 1)),
+          Math.floor(Math.random() * (incorrect.length + 1)),
           0,
-          correctAnswer
+          correct
         );
+
         return {
-          question: {
-            title: htmlDecode(q.question),
-            check: false,
-            correctAnswer: correctAnswer,
-            incorrectAnswers: {
-              answers: [...newArr].map((a) => {
-                return {
-                  answer: a,
-                  id: nanoid(),
-                };
-              }),
-            },
-            id: nanoid(),
-          },
+          title: htmlDecode(q.question),
+          id: nanoid(),
+          check: false,
+          correctAnswer: q.correct_answer,
+          incorrectAnswers: [
+            ...newArr.map((a) => {
+              return {
+                answer: a,
+                id: nanoid(),
+              };
+            }),
+          ],
         };
       });
     });
-  }, []);
+  }, [game]);
 
   // ==== CREATING LIST OF QUESTIONS WITH ANSWERS (INCLUDING CORRECT ONE) ==== //
   return (
@@ -99,20 +114,20 @@ const Quiz = (props) => {
           {questions.map((q) => {
             return (
               <div
-                key={q.question.id}
-                id={q.question.id}
-                check={q.question.check.toString()}
+                key={q.id}
+                id={q.id}
+                check={q.check.toString()}
                 className="quiz-question"
               >
-                <h3 className="questions-title">{q.question.title}</h3>
+                <h3 className="questions-title">{q.title}</h3>
                 <div className="quiz-answers">
-                  {q.question.incorrectAnswers.answers.map((a, idx) => {
+                  {q.incorrectAnswers.map((a) => {
                     return (
                       <div key={a.id} className="quiz-answer">
                         <input
                           type="radio"
                           id={a.id}
-                          name={q.question.id}
+                          name={q.id}
                           value={a.answer}
                           onClick={correctAnswerHandler}
                           onChange={(name) => checkHandler(name)}
@@ -127,12 +142,16 @@ const Quiz = (props) => {
           })}
         </div>
         <div className="quiz-result">
-          {results && (
+          {(results || results == 0) && (
             <div className="quiz-result-output">
-              <span>Your result:</span> {results} / {questions.length}
+              <span>Your result:</span>
+              {results} / {questions.length}
             </div>
           )}
-          <button onClick={resultsHandler}>Check result</button>
+
+          <button onClick={resultsHandler}>
+            {results ? "New Game" : "Check Result"}
+          </button>
         </div>
       </div>
     </>
