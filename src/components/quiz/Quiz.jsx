@@ -51,7 +51,7 @@ const Quiz = (props) => {
       .map((q) => q.question.id)
       .filter((t) => t === targetId);
     if (targetId == targetQ) {
-      alert("YEs");
+      alert("Ye s");
     }
     console.log(targetId);
     console.log(targetQ);
