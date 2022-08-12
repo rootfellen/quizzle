@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./Quiz.css";
 import { nanoid } from "nanoid";
 
+// !TODO: ADD HIGHLIGHTER FOR CORRECT ANSWERS AFTER GIVEN RESULTS,
+// !TODO: INSERT QUESTION COMPONENT INSTEAD OF DIV's
+// !TODO: BRING BACK QUOTES
+// !TODO: MAKE A TIMER FEATURE
+// !TODO: ADD BUTTONS SHARE ON SOCIAL
+
 const Quiz = (props) => {
   const [questions, setQuestions] = useState([]);
   const [correctAnswers, setCorrectAnswers] = useState([]);

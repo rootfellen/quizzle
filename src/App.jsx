@@ -10,12 +10,12 @@ function App() {
   const [quiz, setQuiz] = useState([]);
   const [start, setStart] = useState(false);
 
-  // useEffect(() => {
-  //   fetch("https://inspiring-quotes.p.rapidapi.com/random", options)
-  //     .then((response) => response.json())
-  //     .then((data) => setQuote(data))
-  //     .catch((err) => console.error(err));
-  // }, []);
+  useEffect(() => {
+    fetch("https://inspiring-quotes.p.rapidapi.com/random", options)
+      .then((response) => response.json())
+      .then((data) => setQuote(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=6&type=multiple")
@@ -32,7 +32,11 @@ function App() {
     <>
       <Asteroid />
       <div className="container">
-        {start ? <Quiz data={quiz} /> : <Intro handleStart={handleStart} />}
+        {start ? (
+          <Quiz data={quiz} />
+        ) : (
+          <Intro quote={quote} handleStart={handleStart} />
+        )}
       </div>
     </>
   );
