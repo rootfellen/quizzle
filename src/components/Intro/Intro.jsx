@@ -12,7 +12,7 @@ const Intro = (props) => {
           </div>
           <h1 className="app-title">Quizzle</h1>
           <p className="app-quote">
-            {"Loading..." && props.quote.quote}
+            {!props.quote.quote ? "Loading..." : props.quote.quote}
             <span className="quote-author">{props.quote.author}</span>
           </p>
           <button onClick={props.handleStart} className="app-quizz-btn">
